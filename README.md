@@ -134,7 +134,7 @@ This makes the recommendation logic easy to inspect and explain.
 ---
 
 # System Architecture
-
+```text
 Reference Transaction Dataset
             │
             ▼
@@ -142,40 +142,35 @@ Synthetic Data Generator
             │
             ▼
 SQLite Database
-(users + transactions)
+   users + transactions
             │
             ▼
 SQL Feature Engineering
             │
             ├── Monthly Features
             ├── User-Level Features
-            └── Recent Behavioral Trends
+            └── Behavioral Trends
             │
             ▼
 Python / Pandas Feature Engineering
             │
-            ├── Income Variability
-            ├── Spending Volatility
-            └── Additional Behavioral Metrics
-            │
             ▼
       user_features
             │
-     ┌──────┼───────────────┐
-     │      │               │
-     ▼      ▼               ▼
- KMeans   FinPulse       Behavioral
-Clusters   Score          Signals
-     │      │               │
-     └──────┼───────────────┘
+     ┌──────┼───────────┐
+     │      │           │
+     ▼      ▼           ▼
+  KMeans  FinPulse   Behavioral
+ Clusters   Score      Signals
+     │      │           │
+     └──────┼───────────┘
             │
             ▼
-      Recommendations
+     Recommendations
             │
             ▼
-     Streamlit Dashboard
-
-
+    Streamlit Dashboard
+```
 ---
 
 # Dataset Strategy
@@ -517,8 +512,8 @@ The simulator demonstrates how changing discretionary spending or savings alloca
 It is intended for educational exploration rather than financial forecasting.
 
 ---
-
 # Project Structure
+```text
 
 Finpulse/
 │
@@ -558,7 +553,7 @@ Finpulse/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
-
+```
 ---
 
 # Running the Project
