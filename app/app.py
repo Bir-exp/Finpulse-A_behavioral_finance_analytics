@@ -448,13 +448,17 @@ with overview_tab:
         f"Hello, {user_id} 👋"
     )
 
-    profile_left, profile_center, profile_right = st.columns(
-        [1.4, 1, 1.4]
+    # ==================================================
+    # TOP SUMMARY
+    # ==================================================
+
+    profile_left, profile_center = st.columns(
+        [1.25, 1],
+        gap="large"
     )
 
-
     # ----------------------------------------------
-    # MONEY PERSONALITY WHEEL
+    # LEFT — MONEY PERSONALITY WHEEL
     # ----------------------------------------------
 
     with profile_left:
@@ -475,17 +479,14 @@ with overview_tab:
                 user["spending_control_score"],
                 30
             ),
-
             normalize_trait(
                 user["savings_score"],
                 25
             ),
-
             normalize_trait(
                 user["debt_management_score"],
                 25
             ),
-
             normalize_trait(
                 user["stability_score"],
                 20
@@ -500,8 +501,7 @@ with overview_tab:
                 theta=trait_names + [trait_names[0]],
                 fill="toself",
                 hovertemplate=(
-                    "%{theta}: "
-                    "%{r:.0f}/100"
+                    "%{theta}: %{r:.0f}/100"
                     "<extra></extra>"
                 ),
                 name=""
@@ -509,27 +509,27 @@ with overview_tab:
         )
 
         wheel_fig.update_layout(
-
-            polar={
-                "radialaxis": {
-                    "visible": True,
-                    "range": [0, 100],
-                    "showticklabels": False
-                }
-            },
-
-            showlegend=False,
-
-            margin=dict(
-                l=40,
-                r=40,
-                t=30,
-                b=30
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, 100],
+                    showticklabels=False
+                ),
+                angularaxis=dict(
+                    showticklabels=False
+                )
             ),
-
-            height=390
+            showlegend=False,
+            margin=dict(
+                l=110,
+                r=110,
+                t=65,
+                b=65
+            ),
+            height=460
         )
 
+        # Center user icon
         wheel_fig.add_annotation(
             text="👤",
             x=0.5,
@@ -538,32 +538,108 @@ with overview_tab:
             yref="paper",
             showarrow=False,
             font=dict(
-                size=42
+                size=46
+            )
+        )
+
+        # Top label
+        wheel_fig.add_annotation(
+            text="Saving Habit",
+            x=0.5,
+            y=1.07,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            font=dict(
+                size=13
+            )
+        )
+
+        # Bottom label
+        wheel_fig.add_annotation(
+            text="Income Stability",
+            x=0.5,
+            y=-0.07,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            font=dict(
+                size=13
+            )
+        )
+
+        # Left vertical label
+        wheel_fig.add_annotation(
+            text="Debt Comfort",
+            x=-0.055,
+            y=0.5,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            textangle=-90,
+            font=dict(
+                size=13
+            )
+        )
+
+        # Right vertical label
+        wheel_fig.add_annotation(
+            text="Spending Control",
+            x=1.055,
+            y=0.5,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            textangle=90,
+            font=dict(
+                size=13
             )
         )
 
         st.plotly_chart(
             wheel_fig,
-            use_container_width=True
+            use_container_width=True,
+            config={
+                "displayModeBar": False
+            }
         )
 
-
     # ----------------------------------------------
-    # PROFILE CENTER
+    # CENTER — PERSONALITY + SCORE
     # ----------------------------------------------
 
     with profile_center:
 
-        st.write("")
+        st.markdown(
+            "<div style='height:38px;'></div>",
+            unsafe_allow_html=True
+        )
 
         st.markdown(
-            "<div style='text-align:center;font-size:4.2rem;'>👤</div>",
+            """
+            <div style="
+                text-align:center;
+                font-size:1rem;
+                font-weight:600;
+                opacity:0.60;
+                margin-bottom:8px;
+                letter-spacing:0.03em;
+            ">
+                Personality Type
+            </div>
+            """,
             unsafe_allow_html=True
         )
 
         st.markdown(
             f"""
-            <div class="profile-name">
+            <div style="
+                text-align:center;
+                font-size:2.15rem;
+                font-weight:750;
+                line-height:1.2;
+                margin-bottom:14px;
+            ">
                 {segment_label}
             </div>
             """,
@@ -572,28 +648,31 @@ with overview_tab:
 
         st.markdown(
             f"""
-            <div class="profile-summary">
+            <div style="
+                text-align:center;
+                opacity:0.72;
+                line-height:1.55;
+                font-size:0.98rem;
+                max-width:400px;
+                margin:0 auto 26px auto;
+            ">
                 {segment_summary}
             </div>
             """,
             unsafe_allow_html=True
         )
 
-
-    # ----------------------------------------------
-    # SCORE
-    # ----------------------------------------------
-
-    with profile_right:
-
         st.markdown(
-            "### Your FinPulse Score"
-        )
-
-        st.markdown(
-            f"""
-            <div class="score-number">
-                {int(user['finpulse_score'])}
+            """
+            <div style="
+                text-align:center;
+                font-size:1rem;
+                font-weight:600;
+                opacity:0.60;
+                margin-bottom:7px;
+                letter-spacing:0.03em;
+            ">
+                Your FinPulse Score
             </div>
             """,
             unsafe_allow_html=True
@@ -601,10 +680,25 @@ with overview_tab:
 
         st.markdown(
             f"""
-            <div class="score-caption">
+            <div class="score-number">
+                {int(user["finpulse_score"])}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            f"""
+            <div class="score-caption"
+                 style="margin-top:8px;">
                 {score_title}
             </div>
             """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            "<div style='height:12px;'></div>",
             unsafe_allow_html=True
         )
 
@@ -612,10 +706,70 @@ with overview_tab:
             int(user["finpulse_score"])
         )
 
-        st.caption(
-            score_summary
+        st.markdown(
+            f"""
+            <div style="
+                text-align:center;
+                opacity:0.65;
+                font-size:0.92rem;
+                line-height:1.45;
+                margin-top:10px;
+                max-width:400px;
+                margin-left:auto;
+                margin-right:auto;
+            ">
+                {score_summary}
+            </div>
+            """,
+            unsafe_allow_html=True
         )
 
+    # ==================================================
+    # WHAT FINPULSE NOTICED
+    # ==================================================
+
+    # IMPORTANT:
+    # This starts AFTER the profile_center block.
+    # Therefore it returns to the full Overview width.
+
+    st.divider()
+
+    st.subheader(
+        "What FinPulse noticed"
+    )
+
+    st.caption(
+        "Key patterns identified from your financial behavior."
+    )
+
+    if user_signals.empty:
+
+        st.success(
+            "No major behavioral concerns were detected."
+        )
+
+    else:
+
+        signal_cols = st.columns(
+            2,
+            gap="medium"
+        )
+
+        for index, signal in enumerate(
+            user_signals["signal"]
+        ):
+
+            with signal_cols[
+                index % 2
+            ]:
+
+                with st.container(
+                    border=True
+                ):
+
+                    st.write(
+                        f"💡 **{signal}**"
+                    )
 
     # ==================================================
     # MONEY AT A GLANCE
@@ -627,7 +781,9 @@ with overview_tab:
         "Your Money at a Glance"
     )
 
-    glance1, glance2, glance3, glance4 = st.columns(4)
+    glance1, glance2, glance3, glance4 = st.columns(
+        4
+    )
 
     with glance1:
 
@@ -641,7 +797,6 @@ with overview_tab:
             "per month on average"
         )
 
-
     with glance2:
 
         st.metric(
@@ -652,7 +807,6 @@ with overview_tab:
         st.caption(
             "of your income"
         )
-
 
     with glance3:
 
@@ -665,7 +819,6 @@ with overview_tab:
             "through savings & investments"
         )
 
-
     with glance4:
 
         st.metric(
@@ -676,7 +829,6 @@ with overview_tab:
         st.caption(
             "average monthly surplus"
         )
-
 
     # ==================================================
     # WHERE MONEY GOES
@@ -689,54 +841,49 @@ with overview_tab:
     )
 
     allocation_left, allocation_right = st.columns(
-        [1.25, 1]
+        [1.25, 1],
+        gap="large"
     )
-
 
     with allocation_left:
 
-        allocation_amounts = pd.DataFrame({
+        allocation_amounts = pd.DataFrame(
+            {
+                "Category": [
+                    "Essentials",
+                    "Lifestyle",
+                    "Repayments",
+                    "Savings & Investments",
+                    "Other",
+                ],
+                "Amount": [
+                    user["avg_essential_ratio"]
+                    * user["avg_income"],
 
-            "Category": [
-                "Essentials",
-                "Lifestyle",
-                "Repayments",
-                "Savings & Investments",
-                "Other",
-            ],
+                    user["avg_desire_ratio"]
+                    * user["avg_income"],
 
-            "Amount": [
-                user["avg_essential_ratio"]
-                * user["avg_income"],
+                    user["avg_repayment_ratio"]
+                    * user["avg_income"],
 
-                user["avg_desire_ratio"]
-                * user["avg_income"],
+                    user["avg_investment_ratio"]
+                    * user["avg_income"],
 
-                user["avg_repayment_ratio"]
-                * user["avg_income"],
-
-                user["avg_investment_ratio"]
-                * user["avg_income"],
-
-                user["avg_other_ratio"]
-                * user["avg_income"],
-            ]
-        })
-
+                    user["avg_other_ratio"]
+                    * user["avg_income"],
+                ]
+            }
+        )
 
         donut_fig = go.Figure(
             go.Pie(
-
                 labels=allocation_amounts[
                     "Category"
                 ],
-
                 values=allocation_amounts[
                     "Amount"
                 ],
-
                 hole=0.60,
-
                 hovertemplate=(
                     "<b>%{label}</b><br>"
                     "₹%{value:,.0f}<br>"
@@ -749,7 +896,8 @@ with overview_tab:
         donut_fig.add_annotation(
             text=(
                 f"₹{user['avg_income']:,.0f}"
-                "<br><span style='font-size:12px'>"
+                "<br>"
+                "<span style='font-size:12px'>"
                 "monthly income"
                 "</span>"
             ),
@@ -771,9 +919,11 @@ with overview_tab:
 
         st.plotly_chart(
             donut_fig,
-            use_container_width=True
+            use_container_width=True,
+            config={
+                "displayModeBar": False
+            }
         )
-
 
     with allocation_right:
 
@@ -801,44 +951,6 @@ with overview_tab:
             "goes toward savings and investments."
         )
 
-
-    # ==================================================
-    # WHAT FINPULSE NOTICED
-    # ==================================================
-
-    st.divider()
-
-    st.subheader(
-        "What FinPulse noticed"
-    )
-
-    if user_signals.empty:
-
-        st.success(
-            "No major behavioral concerns were detected."
-        )
-
-    else:
-
-        signal_cols = st.columns(2)
-
-        for index, signal in enumerate(
-            user_signals["signal"]
-        ):
-
-            with signal_cols[
-                index % 2
-            ]:
-
-                with st.container(
-                    border=True
-                ):
-
-                    st.write(
-                        f"💡 **{signal}**"
-                    )
-
-
     # ==================================================
     # RECENT STORY
     # ==================================================
@@ -849,7 +961,9 @@ with overview_tab:
         "What's changed recently?"
     )
 
-    recent1, recent2, recent3 = st.columns(3)
+    recent1, recent2, recent3 = st.columns(
+        3
+    )
 
     desire_change = (
         user["desire_ratio_change_3m"]
@@ -866,7 +980,6 @@ with overview_tab:
         * 100
     )
 
-
     with recent1:
 
         st.metric(
@@ -874,7 +987,6 @@ with overview_tab:
             f"{user['avg_desire_ratio'] * 100:.0f}%",
             delta=f"{desire_change:+.1f} pp"
         )
-
 
     with recent2:
 
@@ -884,7 +996,6 @@ with overview_tab:
             delta=f"{savings_change:+.1f} pp"
         )
 
-
     with recent3:
 
         st.metric(
@@ -892,8 +1003,6 @@ with overview_tab:
             f"{user['avg_expense_ratio'] * 100:.0f}%",
             delta=f"{expense_change:+.1f} pp"
         )
-
-
 # ==================================================
 # TAB 2 — MY YEAR
 # ==================================================
